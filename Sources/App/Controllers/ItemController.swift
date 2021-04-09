@@ -16,7 +16,6 @@ struct ItemController: RouteCollection {
     }
     
     private func readAll(req: Request) throws -> EventLoopFuture<Response> {
-        try checkContentType(req.headers.contentType)
         return Item.query(on: req.db).all().flatMapThrowing { things in
             let group = Dictionary(grouping: things, by: { $0.state })
             var lists: [ItemList] = []
@@ -75,7 +74,6 @@ struct ItemController: RouteCollection {
     }
     
     private func delete(req: Request) throws -> EventLoopFuture<Response> {
-        try checkContentType(req.headers.contentType)
         let id = try checkID(req)
         
         return Item.find(id, on: req.db)
